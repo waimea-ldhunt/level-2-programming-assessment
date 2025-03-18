@@ -18,13 +18,13 @@ fun main() {
     var house = mutableListOf<MutableList<String>>()
     setupHouse(house)
     println(house)
-    (house[1])[2] = "# "; println()
-    println(house.toString().replace("], ", "\n").replace("]", "").replace("[", ""))
-    println((house[1])[2])
+    house[1][2] = "# "; println()
+    println(house.toString().replace("], ", "\n").replace("]", "").replace("[", "").replace(", ",""))
+    println(house[1][2])
 }
 fun setupHouse(house: MutableList<MutableList<String>>) {
     repeat(10){
-        house.add(mutableListOf(". ",". ",". ",". ",". ",". ",". ",". ",". ",". "))
+        house.add(mutableListOf(". ",". ",". ",". ",". ",". ",". ",". ",". ",". ",". ",". ",". ",". "))
     }
 }
 
