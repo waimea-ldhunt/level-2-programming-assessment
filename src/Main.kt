@@ -15,6 +15,17 @@
 
 
 fun main() {
-    println("Hello World!")
+    var house = mutableListOf<MutableList<String>>()
+    setupHouse(house)
+    println(house)
+    (house[1])[2] = "# "; println()
+    println(house.toString().replace("], ", "\n").replace("]", "").replace("[", ""))
+    println((house[1])[2])
 }
+fun setupHouse(house: MutableList<MutableList<String>>) {
+    repeat(10){
+        house.add(mutableListOf(". ",". ",". ",". ",". ",". ",". ",". ",". ",". "))
+    }
+}
+
 
