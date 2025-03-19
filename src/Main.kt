@@ -13,19 +13,47 @@
  */
 
 
-
+const val HOUSE_WIDTH = 14
+const val HOUSE_HEIGHT = 10
+const val EMPTY = ". "
+const val WALL = "# "
 fun main() {
-    var house = mutableListOf<MutableList<String>>()
-    setupHouse(house)
-    println(house)
-    house[1][2] = "# "; println()
-    println(house.toString().replace("], ", "\n").replace("]", "").replace("[", "").replace(", ",""))
+    val house = mutableListOf<MutableList<String>>()
+    val burning = mutableListOf<MutableList<Boolean>>()
+    setupHouse(house, burning)
+    showHouse(house, burning)
+    house[1][2] = "# "
+    house[1][3] = "# "
+    burning[1][3] = true
+    burning[6][6] = true
+    showHouse(house, burning)
     println(house[1][2])
 }
-fun setupHouse(house: MutableList<MutableList<String>>) {
-    repeat(10){
-        house.add(mutableListOf(". ",". ",". ",". ",". ",". ",". ",". ",". ",". ",". ",". ",". ",". "))
+fun setupHouse(house: MutableList<MutableList<String>>, burning: MutableList<MutableList<Boolean>>) {
+    repeat(HOUSE_HEIGHT){
+        val buildRow = mutableListOf<String>()
+        val buildBurningRow = mutableListOf<Boolean>()
+        repeat(HOUSE_WIDTH){
+            buildRow.add(". ")
+            buildBurningRow.add(false)
+        }
+        house.add(buildRow)
+        burning.add(buildBurningRow)
     }
 }
-
-
+fun showHouse (house: MutableList<MutableList<String>>, burning: MutableList<MutableList<Boolean>>) {
+    println()
+    for (row in house) {
+        for (item in 0..< row.size) {
+            if (burning[house.indexOf(row)][item]) {
+                print(row[item].red())
+            } else {
+                when (row[item]) {
+                    WALL -> print(row[item].blue())
+                    EMPTY -> print(row[item])
+                }
+            }
+        }
+        println()
+    }
+}
