@@ -16,7 +16,7 @@ import kotlin.random.Random
 
 const val HOUSE_WIDTH = 14
 const val HOUSE_HEIGHT = 10
-const val WALL_SEED_CHANCE = 12
+const val WALL_SEED_CHANCE = 9
 const val WALL_CONTINUE_CHANCE = 3
 const val EMPTY = "+ "
 const val WALL = "# "
@@ -26,12 +26,12 @@ fun main() {
     val house = mutableListOf<MutableList<String>>() //The 2-dimensional grid that is shown in the showGrid() function
     val fire = mutableListOf<MutableList<Int>>() //The state of the tile, 0 = Not on fire, >0 = On fire, Numbers show the state of the fire.
     setupHouse(house, fire) //runs the function that starts the house setup
-    placeFireSeed(fire)
+    placeFireSeed(house, fire)
     showHouse(house, fire)
     repeat(10) {
+        Thread.sleep(1000)
         stepFire(house, fire)
         showHouse(house, fire)
-        Thread.sleep(1000)
     }
 }
 fun setupHouse(house: MutableList<MutableList<String>>, fire: MutableList<MutableList<Int>>) {
@@ -88,44 +88,31 @@ fun showHouse (house: MutableList<MutableList<String>>, fire: MutableList<Mutabl
     print("# ".cyan().repeat(HOUSE_WIDTH + 2))
     println()
 }
-fun placeFireSeed (fire: MutableList<MutableList<Int>>) {
+fun placeFireSeed (house: MutableList<MutableList<String>>, fire: MutableList<MutableList<Int>>) {
     val fireSeedLocation = mutableListOf(Random.nextInt(HOUSE_HEIGHT - 5, HOUSE_HEIGHT - 1),Random.nextInt(HOUSE_WIDTH - 5, HOUSE_WIDTH - 1))
-    fire[fireSeedLocation[0]][fireSeedLocation[1]] = 4
+    house[fireSeedLocation[0]][fireSeedLocation[1]] = EMPTY
+    fire[fireSeedLocation[0]][fireSeedLocation[1]] = 3
 }
 fun stepFire (house: MutableList<MutableList<String>>, fire: MutableList<MutableList<Int>>) {
-    /**  Step Fire Plan
-     *
-     *   update fire state of tile, if a tile reaches fire = 1
-     *   if the tile is a wall, it burns for one round longer otherwise the fire dies out.
-     *   otherwise decrease the state/lifespan by one.
-     *   cycle through every tile,
-     *   check if the adjacent tiles are on fire,
-     *   add the tile to a list,
-     *   once all tiles have been checked, use the list to update each tile to fire[][] = 4
-     *   check if a player is touching the fire.
-     *   if so, end the game else begin turns.
-     */
-    for ( row in 0..< fire.size) for (tile in 0..< fire[row].size) {
-        if (fire[row][tile] > 0) {
-            fire[row][tile] -= 1
-        }
-    }
     val burnTiles = mutableListOf<MutableList<Int>>()
-    for (row in 0..< fire.size) {
+    for (row in 0..< fire.size){
         for (tile in 0..< fire[row].size) {
-            if (fire[row][tile] == 0) if (house[row][tile] != WALL) if (checkAdjacent(row, tile, fire)) {
-                burnTiles.add(mutableListOf(row,tile))
+            if (fire[row][tile] > 0) {
+                fire[row][tile] -= 1
+            }
+            if (fire[row][tile] == 0 && house[row][tile] != WALL && checkAdjacent(row, tile, fire)){
+                burnTiles.add(mutableListOf(row, tile))
             }
         }
     }
-    for (tile in burnTiles) {
-        fire[tile[0]][tile[1]] = 3
+    for (targetTile in burnTiles) {
+        fire[targetTile[0]][targetTile[1]] = 3
     }
 }
 fun checkAdjacent(row: Int, tile: Int, fire: MutableList<MutableList<Int>>): Boolean {
-    if (row > 0) if (fire[row-1][tile] > 0) return true
-    if (row < HOUSE_HEIGHT-1) if (fire[row+1][tile] > 0) return true
-    if (tile > 0) if (fire[row][tile-1] > 0) return true
-    if (tile < HOUSE_WIDTH-1) if (fire[row][tile+1] > 0) return true
+    if (row > 0 && fire[row - 1][tile] == 3) return true
+    if (row < HOUSE_HEIGHT-1 && fire[row + 1][tile] == 3) return true
+    if (tile > 0 && fire[row][tile- 1] == 3) return true
+    if (tile < HOUSE_WIDTH-1 && fire[row][tile + 1] == 3) return true
     return false
 }

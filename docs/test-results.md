@@ -20,6 +20,22 @@ Comment on test result. Comment on test result. Comment on test result. Comment 
 
 ---
 
+## Fire Spread Test
+
+Checking that the fire spreads correctly and is blocked by walls.
+
+### Test Data Used
+
+Details of test data. Details of test data. Details of test data. Details of test data. Details of test data. Details of test data. Details of test data.
+
+### Test Result
+
+![FireSpreadTest.gif](docs/screenshots/FireSpreadTest.gif)
+
+Comment on test result. Comment on test result. Comment on test result. Comment on test result. Comment on test result. Comment on test result.
+
+---
+
 ## Example Test Name
 
 Example test description. Example test description.Example test description. Example test description.Example test description. Example test description.
@@ -35,4 +51,3 @@ Details of test data. Details of test data. Details of test data. Details of tes
 Comment on test result. Comment on test result. Comment on test result. Comment on test result. Comment on test result. Comment on test result.
 
 ---
-
