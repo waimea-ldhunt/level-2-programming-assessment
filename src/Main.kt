@@ -29,18 +29,21 @@ const val INTENSE = 3
 const val MEDIUM = 2
 const val WEAK = 1
 const val SAFE = 0
+const val MOVES = 2
 
 fun main() {
     val house = mutableListOf<MutableList<String>>() //The 2-dimensional grid that is shown in the showGrid() function
     val fire = mutableListOf<MutableList<Int>>() //The state of the tile, 0 = Not on fire, >0 = On fire, Numbers show the state of the fire.
     val difficulty: Int
-    val player1Location = mutableListOf(1,1)
-    val player2Location = mutableListOf(1,2)
+    val player1Location = mutableListOf(0,1)
+    val player2Location = mutableListOf(1,0)
     val playerFireExtinguishers = mutableListOf(0,0)
     var rounds = 0
+    var remainingMoves: Int
     setupHouse(house, fire) //runs the function that starts the house setup
     placeFireSeed(house, fire)
     while (true) {
+        println()
         println("# Welcome to GAME #")
         println("1: Play")
         println("2: How to Play")
@@ -48,7 +51,29 @@ fun main() {
         when (readlnOrNull()) {
             "1" -> break
             "2" -> {
-                println("Rules go here")
+                println()
+                println("# Each player will take turns moving twice using [W][A][S][D][wait]".padEnd(68)+"#")
+                println("# If you pick up a Fire Extinguisher (&) you may use it with [F]".padEnd(68)+"#")
+                println("# Your goal is to be the last player standing".padEnd(68)+"#")
+                println("# Each difficulty changes game rules:".padEnd(68)+"#")
+                println("# Easy:   Fire is slow".padEnd(68)+"#")
+                println("# Normal: Fire is fast".padEnd(68)+"#")
+                println("# Hard:   Fire is fast + only one fire extinguisher".padEnd(68)+"#")
+                println()
+                println("1: Play")
+                println("2: Quit")
+                print("> ")
+                when (readlnOrNull()) {
+                    "1" -> break
+                    "2" -> exitProcess(0)
+                    else -> {
+                        println()
+                        println("Invalid Input")
+                        Thread.sleep(1000)
+                        println()
+                        continue
+                    }
+                }
             }
             else -> {
                 println()
@@ -60,11 +85,11 @@ fun main() {
         }
     }
     gameLoop@ while (true) {
-
-        println("# Choose a Difficulty: #")
-        println("1: Easy")
-        println("2: Normal")
-        println("3: Hard")
+        println()
+        println("# Choose a Difficulty:".padEnd(23)+"#")
+        println("# 1: Easy".padEnd(23)+"#")
+        println("# 2: Normal".padEnd(23)+"#")
+        println("# 3: Hard".padEnd(23)+"#")
         print("> ")
         difficulty = when (readlnOrNull()) {
             "1" -> 1
@@ -72,21 +97,19 @@ fun main() {
             "3" -> 3
             else -> {
                 println()
-                println("Invalid input")
+                println("# Invalid input #")
                 Thread.sleep(1000)
                 println()
                 continue
             }
         }
-        var fireSpeed = 1
-        var moves = 1
+        var fireSpeed = 2
         var fireExtinguisherCount = 2
         when (difficulty) {
             1 -> {
-                moves = 2
+                fireSpeed = 1
             }
             3 -> {
-                fireSpeed = 2
                 fireExtinguisherCount = 1
             }
         }
@@ -98,18 +121,29 @@ fun main() {
         repeat(fireExtinguisherCount) {placeFireExtinguisher(house, fire)}
         showHouse(house, fire)
         roundLoop@ while (true) {
-            repeat(moves) {
-                playerTurn(house, fire, PLAYER1, player1Location, playerFireExtinguishers)
+            remainingMoves = MOVES
+            repeat(MOVES) {
+                playerTurn(house, fire, PLAYER1, player1Location, playerFireExtinguishers, remainingMoves)
                 showHouse(house, fire)
+                remainingMoves--
             }
-            repeat(moves) {
-                playerTurn(house, fire, PLAYER2, player2Location, playerFireExtinguishers)
+            remainingMoves = MOVES
+            repeat(MOVES) {
+                playerTurn(house, fire, PLAYER2, player2Location, playerFireExtinguishers, remainingMoves)
                 showHouse(house, fire)
+                remainingMoves--
             }
+            checkEmpty(fire, rounds)
             repeat(fireSpeed) {
                 stepFire(house, fire)
                 showHouse(house, fire)
                 Thread.sleep(1000)
+                if (fire[player1Location[0]][player1Location[1]] > 0 && fire[player2Location[0]][player2Location[1]] > 0) {
+                    println()
+                    println("# No Survivors".padEnd(29)+"#")
+                    println("# You survived for $rounds rounds".padEnd(29)+"#")
+                    exitProcess(0)
+                }
                 checkPlayer(fire, PLAYER1, player1Location, rounds)
                 checkPlayer(fire, PLAYER2, player2Location, rounds)
             }
@@ -117,10 +151,22 @@ fun main() {
         }
     }
 }
-fun playerTurn(house: MutableList<MutableList<String>>, fire: MutableList<MutableList<Int>>, player: String, location: MutableList<Int>, playerFireExtinguishers: MutableList<Int>) {
+fun playerTurn(house: MutableList<MutableList<String>>, fire: MutableList<MutableList<Int>>, player: String, location: MutableList<Int>, playerFireExtinguishers: MutableList<Int>, remainingMoves: Int) {
     turnLoop@ while (true) {
         println()
-        println("# It is your move, player $player#")
+        if (player == PLAYER1) {
+            print("# It is your turn ")
+            print("Player 1".blue())
+            println("".padEnd(32)+"#")
+            println("# You have ${playerFireExtinguishers[0]} Fire Extinguishers".padEnd(32)+"#")
+        }
+        if (player == PLAYER2) {
+            print("# It is your turn ")
+            print("Player 2".green())
+            println("".padEnd(32)+"#")
+            println("# You have ${playerFireExtinguishers[1]} Fire Extinguishers".padEnd(32)+"#")
+        }
+        println("# You have $remainingMoves moves remaining".padEnd(32)+"#")
         print("> ")
         when (readlnOrNull()?.uppercase()) {
             "W" -> {
@@ -157,7 +203,7 @@ fun playerTurn(house: MutableList<MutableList<String>>, fire: MutableList<Mutabl
                 }
             }
             "D" -> {
-                if (location[1] < HOUSE_WIDTH) {
+                if (location[1] < HOUSE_WIDTH-1) {
                     if (movePlayer(house, fire, player, location, 0, 1, playerFireExtinguishers)) break@turnLoop
                     else continue@turnLoop
                 } else {
@@ -170,43 +216,48 @@ fun playerTurn(house: MutableList<MutableList<String>>, fire: MutableList<Mutabl
             "F" -> {
                 if (player == PLAYER1) {
                     if (playerFireExtinguishers[0] > 0) {
-                        for (row in location[0]-2..location[0]+2) {
-                            for (tile in location[1]-2..location[1]+2) {
-                                if (row in 1..<HOUSE_HEIGHT) {
-                                    if (tile in 1..<HOUSE_WIDTH) fire[row][tile] = SAFE
-                                }
-                            }
-                        }
+                        extinguishFire(fire, location)
                         playerFireExtinguishers[0] -= 1
                         placeFireExtinguisher(house, fire)
                         showHouse(house, fire)
                         continue@turnLoop
                     } else {
                         println()
-                        println("# You do not have a Fire Extinguisher #")
+                        println("# You do not have any Fire Extinguishers #")
                         Thread.sleep(1000)
                         continue@turnLoop
                     }
                 } else if (player == PLAYER2) {
                     if (playerFireExtinguishers[1] > 0) {
-                        for (row in location[0]-2..location[0]+2) {
-                            for (tile in location[1]-2..location[1]+2) {
-                                if (row in 1..<HOUSE_HEIGHT) {
-                                    if (tile in 1..<HOUSE_WIDTH) fire[row][tile] = SAFE
-                                }
-                            }
-                        }
+                        extinguishFire(fire, location)
                         playerFireExtinguishers[1] -= 1
                         placeFireExtinguisher(house, fire)
                         showHouse(house, fire)
                         continue@turnLoop
                     } else {
                         println()
-                        println("# You do not have a Fire Extinguisher #")
+                        println("# You do not have any Fire Extinguishers #")
                         Thread.sleep(1000)
                         continue@turnLoop
                     }
                 }
+            }
+            "WAIT" -> break@turnLoop
+            else -> {
+                println()
+                println("# Invalid input #")
+                Thread.sleep(1000)
+                println()
+                continue
+            }
+        }
+    }
+}
+fun extinguishFire(fire: MutableList<MutableList<Int>>, location: MutableList<Int>) {
+    for (row in location[0]-2..location[0]+2) {
+        for (tile in location[1]-2..location[1]+2) {
+            if (row in 0..<HOUSE_HEIGHT) {
+                if (tile in 0..<HOUSE_WIDTH) fire[row][tile] = SAFE
             }
         }
     }
@@ -215,13 +266,13 @@ fun checkPlayer(fire: MutableList<MutableList<Int>>, player: String, location: M
     if (fire[location[0]][location[1]] > 0) {
         if (player == PLAYER1) {
             println()
-            println("# PLAYER 2 WINS! #")
-            println("# You survived for $rounds rounds #")
+            println("# Player 2 Escapes!".padEnd(29)+"#")
+            println("# You survived for $rounds rounds".padEnd(29)+"#")
             exitProcess(0)
         } else if (player == PLAYER2) {
             println()
-            println("# PLAYER 1 WINS! #")
-            println("# You survived for $rounds rounds #")
+            println("# Player 1 Escapes!".padEnd(29)+"#")
+            println("# You survived for $rounds rounds".padEnd(29)+"#")
             exitProcess(0)
         }
     }
@@ -246,21 +297,18 @@ fun movePlayer(house: MutableList<MutableList<String>>, fire: MutableList<Mutabl
                 println()
                 println("# That Movement Is Blocked by another player #")
                 Thread.sleep(1000)
-                println()
                 return false
             }
         } else {
             println()
             println("# That Movement Is Blocked by Fire #")
             Thread.sleep(1000)
-            println()
             return false
         }
     } else {
         println()
         println("# That Movement Is Blocked by a Wall #")
         Thread.sleep(1000)
-        println()
         return false
     }
 }
@@ -289,8 +337,8 @@ fun setupHouse(house: MutableList<MutableList<String>>, fire: MutableList<Mutabl
             }
         }
     }
-    house[1][1] = PLAYER1
-    house[1][2] = PLAYER2
+    house[0][1] = PLAYER1
+    house[1][0] = PLAYER2
 }
 fun showHouse (house: MutableList<MutableList<String>>, fire: MutableList<MutableList<Int>>) {
     println()
@@ -328,13 +376,9 @@ fun placeFireExtinguisher (house: MutableList<MutableList<String>>, fire: Mutabl
     while (true) {
         val fireExtinguisherLocation = mutableListOf(Random.nextInt(0, HOUSE_HEIGHT),Random.nextInt(0, HOUSE_WIDTH))
         if (fire[fireExtinguisherLocation[0]][fireExtinguisherLocation[1]] == SAFE) {
-            if (house[fireExtinguisherLocation[0]][fireExtinguisherLocation[1]] != WALL) {
-                if (house[fireExtinguisherLocation[0]][fireExtinguisherLocation[1]] != PLAYER1) {
-                    if (house[fireExtinguisherLocation[0]][fireExtinguisherLocation[1]] != PLAYER2) {
-                        house[fireExtinguisherLocation[0]][fireExtinguisherLocation[1]] = FIRE_EXTINGUISHER
-                        break
-                    }
-                }
+            if (house[fireExtinguisherLocation[0]][fireExtinguisherLocation[1]] == EMPTY) {
+                house[fireExtinguisherLocation[0]][fireExtinguisherLocation[1]] = FIRE_EXTINGUISHER
+                break
             }
         }
     }
@@ -344,10 +388,6 @@ fun stepFire (house: MutableList<MutableList<String>>, fire: MutableList<Mutable
     for (row in 0..< fire.size){
         for (tile in 0..< fire[row].size) {
             if (fire[row][tile] == SAFE && house[row][tile] != WALL && checkAdjacent(row, tile, fire)){
-                if (house[row][tile] == FIRE_EXTINGUISHER) {
-                    house[row][tile] = EMPTY
-                    placeFireExtinguisher(house, fire)
-                }
                 burnTiles.add(mutableListOf(row, tile))
             }
         }
@@ -361,6 +401,10 @@ fun stepFire (house: MutableList<MutableList<String>>, fire: MutableList<Mutable
     }
     for (targetTile in burnTiles) {
         fire[targetTile[0]][targetTile[1]] = INTENSE
+        if (house[targetTile[0]][targetTile[1]] == FIRE_EXTINGUISHER) {
+            house[targetTile[0]][targetTile[1]] = EMPTY
+            placeFireExtinguisher(house, fire)
+        }
     }
 }
 fun checkAdjacent(row: Int, tile: Int, fire: MutableList<MutableList<Int>>): Boolean {
@@ -373,4 +417,20 @@ fun checkAdjacent(row: Int, tile: Int, fire: MutableList<MutableList<Int>>): Boo
     if (tile < HOUSE_WIDTH-1 && fire[row][tile + 1] == INTENSE)
         return true
     return false
+}
+fun checkEmpty(fire: MutableList<MutableList<Int>>, rounds: Int) {
+    var intenseFireCount = 0
+    for (row in 0..< fire.size){
+        for (tile in 0..< fire[row].size){
+            if (fire[row][tile] == INTENSE) {
+                intenseFireCount++
+            }
+        }
+    }
+    if (intenseFireCount == 0) {
+        println()
+        println("# Fire Extinguished!".padEnd(30)+"#")
+        println("# You escaped after $rounds rounds".padEnd(30)+"#")
+        exitProcess(0)
+    }
 }

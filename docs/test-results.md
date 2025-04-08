@@ -30,7 +30,7 @@ Details of test data. Details of test data. Details of test data. Details of tes
 
 ### Test Result
 
-![FireSpreadTest.gif](docs/screenshots/FireSpreadTest.gif)
+![FireSpreadTest.gif](screenshots/example.png)
 
 Comment on test result. Comment on test result. Comment on test result. Comment on test result. Comment on test result. Comment on test result.
 
