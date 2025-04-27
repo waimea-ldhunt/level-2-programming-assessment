@@ -13,8 +13,6 @@ The project is written in the [Kotlin](https://kotlinlang.org) programming langu
 - Using non-trivial string manipulation
 - Using additional non-core libraries
 
-** EDIT LIST ABOVE TO MATCH YOUR PROJECT**
-
 ---
 
 ## Project Files
@@ -27,4 +25,4 @@ The project is written in the [Kotlin](https://kotlinlang.org) programming langu
 
 ## Project Description
 
-**PLACE YOUR PROJECT DESCRIPTION HERE**
+Game is a two-player game where you attempt to survive for as long as possible in a burning building, use Fire extinguishers to put out the fire, and be the last one standing.
