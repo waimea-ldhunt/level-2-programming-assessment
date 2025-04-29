@@ -15,7 +15,7 @@ The game functions correctly and meets the specification:
 - [x] The game is **playable**
 - [x] The **instructions** for the game are available in-game
 - [x] **Two players** can play
-- [ ] Player **names** are used to identify each player
+- [x] Player **names** are used to identify each player
 - [x] Players **take turns** to play
 - [x] Players provides **input data** to the game (e.g. moves to make)
 - [x] The **current status** of the game is shown after each play
@@ -49,13 +49,13 @@ The program code:
 The program has been tested and there is documented evidence that:
 
 - [x] The game is **fully functional**, showing testing of:
-    - [ ] game setup
+    - [x] game setup
     - [ ] player moves
     - [ ] players taking turns
     - [ ] scoring (if any)
     - [ ] players winning
     - [ ] final feedback (if appropriate)
-- [ ] **Valid (expected) data** has been used to test **all data inputs**
+- [x] **Valid (expected) data** has been used to test **all data inputs**
 - [ ] Where tests have failed, **fixes** are discussed and **tests re-run**
 
 ---
@@ -82,7 +82,7 @@ The program uses functions appropriately, where:
 
 The program code is well-commented:
 
-- [ ] **JavaDoc Block comments** are used at the top of each **file** and **function**
+- [x] **JavaDoc Block comments** are used at the top of each **file** and **function**
 - [x] Comments accurately describe the **function and behaviour** of the code:
     - [x] Defining the **purpose** of functions / key blocks of code
     - [x] Explaining the **reason** (the '**why**') of key parts of the code
@@ -93,8 +93,8 @@ The program code is well-commented:
 The program has been tested using:
 
 - [ ] A test plan **prepared in advance** of the coding
-- [ ] A test plan that **defines test data values** to be used
-- [ ] Test values that cover **boundary** (limit / edge) cases
+- [x] A test plan that **defines test data values** to be used
+- [x] Test values that cover **boundary** (limit / edge) cases
 
 ---
 
@@ -128,5 +128,5 @@ The program has been tested to be **robust**:
 
 - [ ] With a **comprehensive and thorough** test plan
 - [ ] Testing **regularly** throughput development, allowing **time for debugging**
-- [ ] Using test values that cover **invalid** (unexpected) cases
-- [ ] Resulting in a program that **copes appropriately** with invalid inputs
+- [x] Using test values that cover **invalid** (unexpected) cases
+- [x] Resulting in a program that **copes appropriately** with invalid inputs
