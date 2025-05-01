@@ -1,6 +1,6 @@
 # Success Criteria Checklist
 
-This checklist can be used to gauge progress towards different levels of success. Note that to pass, *all* of the
+This checklist can be used to gauge progress towards different levels of success. Note that to pass, *all* the
 Achieve Criteria must be met; for Merit, you need all Achieve, plus all the Merit Criteria, and so on for Excellence
 too.
 
@@ -50,13 +50,13 @@ The program has been tested and there is documented evidence that:
 
 - [x] The game is **fully functional**, showing testing of:
     - [x] game setup
-    - [ ] player moves
-    - [ ] players taking turns
+    - [x] player moves
+    - [x] players taking turns
     - [ ] scoring (if any)
-    - [ ] players winning
+    - [x] players winning
     - [ ] final feedback (if appropriate)
 - [x] **Valid (expected) data** has been used to test **all data inputs**
-- [ ] Where tests have failed, **fixes** are discussed and **tests re-run**
+- [x] Where tests have failed, **fixes** are discussed and **tests re-run**
 
 ---
 
@@ -126,7 +126,7 @@ The program code:
 
 The program has been tested to be **robust**:
 
-- [ ] With a **comprehensive and thorough** test plan
-- [ ] Testing **regularly** throughput development, allowing **time for debugging**
+- [x] With a **comprehensive and thorough** test plan
+- [x] Testing **regularly** throughput development, allowing **time for debugging**
 - [x] Using test values that cover **invalid** (unexpected) cases
 - [x] Resulting in a program that **copes appropriately** with invalid inputs

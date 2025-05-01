@@ -51,6 +51,9 @@ fun getPlayerName(player: String): String { //asks each player for their name
 /**
  * Player Turn:
  * Communicates with player and gives action prompt.
+ * W A S D movement
+ * F fire extinguisher use
+ * skip ends your move immediately.
  */
 fun playerTurn(
     house: MutableList<MutableList<String>>,
@@ -171,6 +174,7 @@ fun playerTurn(
 /**
  * Move Player:
  * Performs necessary checks and moves player one tile if valid.
+ * If invalid, gives player reasoning and allows them to try again.
  */
 fun movePlayer(
     house: MutableList<MutableList<String>>,
@@ -221,6 +225,7 @@ fun movePlayer(
 /**
  * Check Player:
  * Checks for individual player win scenarios.
+ * (Only one player touching the fire)
  */
 fun checkPlayer(
     fire: MutableList<MutableList<Int>>,
@@ -230,7 +235,7 @@ fun checkPlayer(
     location: MutableList<Int>,
     rounds: Int
 ) {
-    if (fire[location[0]][location[1]] > 0) { //if tile is on fire
+    if (fire[location[0]][location[1]] > SAFE) { //if tile is on fire
         if (player == PLAYER1) { //if player is PLAYER1, player 2 wins
             println()
             println("# ${player2Name.green()} Escapes!")

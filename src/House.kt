@@ -18,13 +18,15 @@ import kotlin.system.exitProcess
  * extinguishFire
  * checkEmpty
  *
- *
  * SETUP FUNCTIONS-----------------------------------------------------------------------------------------------------|
  *
  * House Setup:
  * Fills the house and fire lists with empty tiles, builds the walls and places both players.
  */
-fun setupHouse(house: MutableList<MutableList<String>>, fire: MutableList<MutableList<Int>>) {
+fun setupHouse(
+    house: MutableList<MutableList<String>>,
+    fire: MutableList<MutableList<Int>>,
+) {
 
     //builds two mutable lists of desired size (height * width), one containing empty tiles (string) and the other containing safe tiles (int)
     repeat(HOUSE_HEIGHT) {
@@ -66,6 +68,7 @@ fun setupHouse(house: MutableList<MutableList<String>>, fire: MutableList<Mutabl
 /**
  * Fire Seed:
  * Places the start of the fire.
+ * gets a random tile, within a specified area and removes any walls that might be blocking it.
  */
 fun placeFireSeed(house: MutableList<MutableList<String>>, fire: MutableList<MutableList<Int>>) {
     val fireSeedLocation = mutableListOf( //creates a list of (X, Y)
@@ -73,13 +76,25 @@ fun placeFireSeed(house: MutableList<MutableList<String>>, fire: MutableList<Mut
         Random.nextInt(HOUSE_HEIGHT - 5, HOUSE_HEIGHT - 1) //random Y value
     )
 
-    house[fireSeedLocation[1]][fireSeedLocation[0]] = EMPTY //removes walls if there are any
+    //removes walls if there are any
+    house[fireSeedLocation[1]][fireSeedLocation[0]] = EMPTY
+    house[fireSeedLocation[1] - 1][fireSeedLocation[0]] = EMPTY
+    house[fireSeedLocation[1]][fireSeedLocation[0] - 1] = EMPTY
+
     fire[fireSeedLocation[1]][fireSeedLocation[0]] = INTENSE //sets fire intensity of tile to spreadable
 }
 
 /**
  * Fire Extinguisher:
- * Places the fire extinguisher where valid.
+ * Places the fire extinguisher where valid:
+ *
+ * Gets a random location within the playable area
+ * Checks if the tile is not on fire
+ *  else, it tries again.
+ * Checks if the tile is empty
+ *  else, it tries again.
+ * if tile is valid, places fire extinguisher
+ *
  */
 fun placeFireExtinguisher(house: MutableList<MutableList<String>>, fire: MutableList<MutableList<Int>>) {
     while (true) {
@@ -102,6 +117,16 @@ fun placeFireExtinguisher(house: MutableList<MutableList<String>>, fire: Mutable
 /**
  * Show House:
  * Prints the house array, colouring using tile types and the fire array.
+ * In the format:
+ *
+ * Top border
+ *
+ * Side border
+ * individual row
+ * Side border
+ * (repeated a number of times equal to the HOUSE_HEIGHT variable)
+ *
+ * Bottom Border
  */
 fun showHouse(
     house: MutableList<MutableList<String>>,
@@ -119,7 +144,6 @@ fun showHouse(
         for (tile in 0..<house[row].size) {
 
             if (fire[row][tile] > SAFE) { //if the tile is on fire, colour tile by fire intensity
-
                 when (fire[row][tile]) {
                     INTENSE -> print(house[row][tile].col(225, 225, 0))
                     MEDIUM -> print(house[row][tile].col(255, 150, 25))
@@ -148,7 +172,7 @@ fun showHouse(
  * FIRE FUNCTIONS -----------------------------------------------------------------------------------------------------|
  *
  * Step Fire:
- * Checks each tile for adjacent fire and if there is puts them in a list, Steps through each fire stage of existing fire and then
+ * Checks each tile for adjacent fire (using checkAdjacent) and if there is puts them in a list, Steps through each fire stage of existing fire and then
  * sets the tiles in the created list on fire.
  */
 fun stepFire(house: MutableList<MutableList<String>>, fire: MutableList<MutableList<Int>>) {
@@ -194,6 +218,14 @@ fun stepFire(house: MutableList<MutableList<String>>, fire: MutableList<MutableL
 /**
  * Check Adjacent:
  * Checks each adjacent and if any have INTENSE fire, returns true.
+ * Checks directions in order:
+ *
+ * Above
+ * Below
+ * Left
+ * Right
+ *
+ * If none have any INTENSE fire, returns false
  */
 fun checkAdjacent(row: Int, tile: Int, fire: MutableList<MutableList<Int>>): Boolean {
     if (row > 0 && fire[row - 1][tile] == INTENSE) //if not outside border, checks tile above for intense fire
@@ -214,6 +246,7 @@ fun checkAdjacent(row: Int, tile: Int, fire: MutableList<MutableList<Int>>): Boo
 /**
  * Extinguish Fire:
  * Performs necessary checks and extinguishes fire accordingly.
+ * Sets the fire value of every tile within the area specified by the EXTINGUISHER_STRENGTH value to SAFE.
  */
 fun extinguishFire(fire: MutableList<MutableList<Int>>, location: MutableList<Int>) {
     for (row in location[0] - EXTINGUISHER_STRENGTH..location[0] + EXTINGUISHER_STRENGTH) { //for each row within two rows of the player (vertical component)

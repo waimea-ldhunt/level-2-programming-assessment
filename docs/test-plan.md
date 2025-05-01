@@ -13,7 +13,7 @@ Terminology:
 ## Setup Test
 
 Testing that the house is set up correctly, the grid is full and the correct size and checking that the fire seed is
-placed correctly/in a valid location.
+placed correctly/within the specified location.
 
 ### Test Data To Use
 
@@ -59,7 +59,7 @@ be deducted for invalid movements.
 
 ## Invalid Inputs
 
-The program should account for invalid inputs.
+The program should account for invalid inputs and handle them in a way that allows the user to try again.
 
 ### Test Data To Use
 
@@ -72,53 +72,67 @@ continue as normal.
 
 ---
 
-## Example Test Name
+## Win Conditions
 
-Example test description. Example test description. Example test description. Example test description. Example test
-description. Example test description.
+There are three win conditions:
+One of the players is engulfed by fire, in that case, the other player wins.
+Both of the players are engulfed by fire at the same time, no players win.
+The fire can no longer spread, both players win.
 
 ### Test Data To Use
 
-Details of test data and reasons for selection. Details of test data and reasons for selection. Details of test data and
-reasons for selection.
+Play testing for each scenario (running the program multiple times).
 
 ### Expected Test Result
 
-Statement detailing what should happen. Statement detailing what should happen. Statement detailing what should happen.
-Statement detailing what should happen.
+Each win condition/scenario should end the game, reveal the winning player/s and show the number of rounds survived.
 
 ---
 
-## Example Test Name
+## Player Actions / Turns
 
-Example test description. Example test description. Example test description. Example test description. Example test
-description. Example test description.
+Player should be able to perform actions correctly and turns should be organised and shown correctly.
 
 ### Test Data To Use
 
-Details of test data and reasons for selection. Details of test data and reasons for selection. Details of test data and
-reasons for selection.
+Running and play testing the program multiple times to investigate weather or not the program handles player turns and
+actions correctly.
 
 ### Expected Test Result
 
-Statement detailing what should happen. Statement detailing what should happen. Statement detailing what should happen.
-Statement detailing what should happen.
+Player should have correctly ordered turns:
+The players can move a number of times specified by the MOVES value
+At the end of Player 2's turn, the fire should spread a number of tiles specified by the fireSpeed variable.
+Between these actions, the house should be printed to show progress.
 
 ---
 
-## Example Test Name
+## Player Movement and Obstacle Checking
 
-Example test description. Example test description. Example test description. Example test description. Example test
-description. Example test description.
+Players should be able to move one tile in any direction that is not blocked by a wall or the fire.
 
 ### Test Data To Use
 
-Details of test data and reasons for selection. Details of test data and reasons for selection. Details of test data and
-reasons for selection.
+Running the program multiple times to test movement and blocking.
+Testing attempting to move into walls from multiple directions and moving into fire.
 
 ### Expected Test Result
 
-Statement detailing what should happen. Statement detailing what should happen. Statement detailing what should happen.
-Statement detailing what should happen.
+Player should move exactly one tile in the desired direction unless they are blocked by a wall or fire.
+
+---
+
+## Fire Extinguisher
+
+The fire extinguisher should work as intended and extinguish the fire correctly.
+
+### Test Data To Use
+
+Running the program multiple times in order to test whether the fire extinguisher works correctly.
+
+### Expected Test Result
+
+The fire extinguisher should convert all tiles within a specified distance of the player into SAFE tiles,
+removing all fire.
 
 ---

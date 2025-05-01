@@ -4,7 +4,7 @@ import kotlin.system.exitProcess
  * ===================================================================================*
  * Programming Project for NCEA Level 2, Standard 91896
  * -----------------------------------------------------------------------------------*
- * Project Name:   NAME
+ * Project Name:   Burning House
  * Project Author: Lachlan Hunt
  * GitHub Repo:    https://github.com/waimea-ldhunt/level-2-programming-assessment
  * -----------------------------------------------------------------------------------*
@@ -13,7 +13,6 @@ import kotlin.system.exitProcess
  * Player --> Player control and management
  *
  * House --> House/Fire list manipulation
- *
  * ===================================================================================*
  *
  * Main.kt
@@ -53,8 +52,7 @@ fun main() {
     var rounds = 0 //Number of rounds that have passes
     var remainingMoves: Int // Number of
 
-    setupHouse(house, fire) //starts the house setup function
-    placeFireSeed(house, fire) //Places the beginning of the fire
+
 
     playLoop@ while (true) {
         println()
@@ -128,6 +126,9 @@ fun main() {
         val player1Tile = player1Name.first().uppercase() + " "
         val player2Tile = player2Name.first().uppercase() + " "
 
+        setupHouse(house, fire) //starts the house setup function
+        placeFireSeed(house, fire) //Places the beginning of the fire
+
         var fireSpeed = 2
         var fireExtinguisherCount = 2
 
@@ -187,8 +188,6 @@ fun main() {
                 remainingMoves--
             }
 
-            checkEmpty(fire, rounds) //checks if there is no INTENSE fire remaining and then ends game if so.
-
             repeat(fireSpeed) {
                 stepFire(house, fire) //steps the fire
                 showHouse(house, fire, player1Tile, player2Tile) //shows the house
@@ -218,6 +217,8 @@ fun main() {
                     ) //checks if Player 2 is in the fire and ends if so (checkPlayer).
                 }
             }
+
+            checkEmpty(fire, rounds) //checks if there is no INTENSE fire remaining and then ends game if so.
 
             rounds += 1
         }
